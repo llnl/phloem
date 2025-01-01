@@ -193,7 +193,7 @@ benchmark (int msgsize, int iters)
 	{
 	  double msgs;
 
-	  msgs = (double) (win_size * num_nbors * num_cores * iters * 2);
+	  msgs = (double) win_size * num_nbors * num_cores * iters * 2;
 	  printf
 	    ("%8d %6d %12.2lf %10.2lf %12.2lf %10.2lf %12.2lf %10.2lf\n",
 	     msgsize, iters,  msgs / mean,
