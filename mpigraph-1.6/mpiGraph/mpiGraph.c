@@ -11,15 +11,15 @@ Please also read the Additional BSD Notice below.
 
 Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
-â* Redistributions of source code must retain the above copyright notice, this
+ï¿½* Redistributions of source code must retain the above copyright notice, this
    list of conditions and the disclaimer below.
-â* Redistributions in binary form must reproduce the above copyright notice,
+ï¿½* Redistributions in binary form must reproduce the above copyright notice,
    this list of conditions and the disclaimer (as noted below) in the documentation
    and/or other materials provided with the distribution.
-â* Neither the name of the LLNL nor the names of its contributors may be used to
+ï¿½* Neither the name of the LLNL nor the names of its contributors may be used to
    endorse or promote products derived from this software without specific prior
    written permission.
-â* 
+ï¿½* 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
@@ -66,7 +66,7 @@ Additional BSD Notice
 #include <stdlib.h>
 #include <unistd.h>
 #include <mpi.h>
-#include </usr/include/sys/resource.h>
+#include <sys/resource.h>
 /*#include "/usr/global/tools/tests/include/print_mpi_resources.h"*/
 char  hostname[256];
 char* hostnames;
