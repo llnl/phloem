@@ -12,14 +12,13 @@ RUN dnf clean all \
 
 USER fluxuser
 
-ENV MPIBIND_INSTALL_PREFIX=/home/fluxuser/mpibind-install
-
 RUN source /etc/profile.d/modules.sh \
+	&& mkdir -p opt \
     && module load mpi \
-    && git clone https://github.com/LLNL/mpibind.git ${GIT_CLONE_STAGING_DIR}/mpibind \
-	&& cd ${GIT_CLONE_STAGING_DIR}/mpibind \
+    && git clone https://github.com/LLNL/mpibind.git \
+	&& cd mpibind \
 	&& ./bootstrap \
-	&& ./configure --prefix=${MPIBIND_INSTALL_PREFIX} \
+	&& ./configure --prefix=/home/fluxuser/opt/ \
 	&& make -j install \
 	&& git clone https://github.com/spack/spack.git \
 	&& ./spack/bin/spack repo update \
@@ -30,5 +29,7 @@ COPY --chown=fluxuser:fluxuser . /home/fluxuser/phloem
 RUN mkdir -p /home/fluxuser/spack/var/spack/environments/phloem/ \
 	&& ln -sf /home/fluxuser/phloem/containerfiles/flux/el10/spack.yaml \
 	/home/fluxuser/spack/var/spack/environments/phloem/spack.yaml
+
+ENV FLUX_SHELL_RC_PATH=/home/fluxuser/opt/share/mpibind:${FLUX_SHELL_RC_PATH:-}
 
 ENTRYPOINT ["exec /usr/bin/flux start /bin/bash"]

@@ -27,8 +27,11 @@ build:
     - batch
   variables:
     LLNL_SLURM_SCHEDULER_PARAMETERS: "-N 1 -n 4"
+    GIT_SUBMODULE_STRATEGY: recursive
   script:
-    - git submodule update --init --recursive
+    - git submodule sync --recursive
+    - git submodule update --init --recursive --depth 0
+    - git submodule status --recursive
     - mkdir -p build
     - cmake -B build -C .gitlab/ci/host-config.cmake -DCMAKE_INSTALL_PREFIX=${PREFIX}
     - cmake --build build -j
@@ -115,6 +118,7 @@ build_hip:
     - batch
   variables:
     LLNL_FLUX_SCHEDULER_PARAMETERS: "-qpci -x -N 1 -n 4"
+    GIT_SUBMODULE_STRATEGY: recursive
   script:
     - git submodule update --init --recursive
     - mkdir -p build
@@ -203,6 +207,7 @@ build_cuda:
     - batch
   variables:
     LLNL_SLURM_SCHEDULER_PARAMETERS: "-N 1 -n 4"
+    GIT_SUBMODULE_STRATEGY: recursive
   script:
     - git submodule update --init --recursive
     - module load cmake/3.30.5

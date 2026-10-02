@@ -12,11 +12,11 @@ permissions:
   id-token: write
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
       - run: pip install --upgrade pip
       - run: pip install -r docs/requirements.txt
       - run: cmake -B build/docs -S docs
@@ -26,10 +26,16 @@ jobs:
       - name: Build HTML
         run: cmake --build build/docs --target html
       - run: touch build/docs/_build/html/.nojekyll
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: build/docs/_build/html
-      - name: Deploy to GitHub Pages
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
         uses: actions/deploy-pages@v4
-        if: github.ref == 'refs/heads/main'
