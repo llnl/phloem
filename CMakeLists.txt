@@ -146,3 +146,13 @@ if(DOCS)
         COMMENT "Building all documentation"
     )
 endif()
+
+option (INSTALL_MANDIR "Install manual pages" OFF)
+
+if(INSTALL_MANDIR)
+    if(EXISTS share/man/man1)
+        install(DIRECTORY share/man/man1
+                DESTINATION ${CMAKE_INSTALL_MANDIR}/man1
+                FILES_MATCHING PATTERN "*.1")
+    endif()
+endif()
