@@ -151,12 +151,14 @@ add_custom_target(clean-docs
 install(
     DIRECTORY ${SPHINX_MAN_DIR}/
     DESTINATION share/man/man1
+    COMPONENT man
     FILES_MATCHING PATTERN "*.1"
 )
 
 # Install HTML documentation
 install(
     DIRECTORY ${SPHINX_HTML_DIR}/
+    COMPONENT html
     DESTINATION share/doc/phloem/html
 )
 
