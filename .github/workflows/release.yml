@@ -19,10 +19,12 @@ jobs:
 
       - name: Build manpages
         run: |
-          cmake -B build -DDOCS=ON
+          pushd docs
+          cmake -B build
           cmake --build build --target man
-          mkdir -p share/man/man1
-          cp build/docs/_build/man/*.1 share/man/man1/
+          cmake --install build --component man --prefix ..
+          rm -rf build
+          popd
 
       - name: Create source tarball (no thirdparty)
         run: |
