@@ -35,6 +35,11 @@ else()
             "Or add -DBLT_SOURCE_DIR=/path/to/blt to your CMake command." )
     endif()
 endif()
+
+if(DEFINED CMAKE_INSTALL_MANDIR)
+    set(_MANDIR_WAS_SET TRUE)
+endif()
+
 include(${BLT_SOURCE_DIR}/SetupBLT.cmake)
 include(GNUInstallDirs)
 
@@ -147,12 +152,8 @@ if(DOCS)
     )
 endif()
 
-option (INSTALL_MANDIR "Install manual pages" OFF)
-
-if(INSTALL_MANDIR)
-    if(EXISTS share/man/man1)
-        install(DIRECTORY share/man/man1
-                DESTINATION ${CMAKE_INSTALL_MANDIR}/man1
-                FILES_MATCHING PATTERN "*.1")
-    endif()
+if(_MANDIR_WAS_SET AND EXISTS ${CMAKE_SOURCE_DIR}/share/man/man1)
+    install(DIRECTORY share/man/man1
+            DESTINATION ${CMAKE_INSTALL_MANDIR}
+            FILES_MATCHING PATTERN "*.1")
 endif()
