@@ -33,14 +33,6 @@ jobs:
             -o phloem-${{ github.ref_name }}.tar.gz \
             HEAD
 
-      - name: Create full tarball (with thirdparty)
-        run: |
-          git archive --format=tar.gz \
-            --prefix=phloem-${{ github.ref_name }}/ \
-            -o phloem-${{ github.ref_name }}-full.tar.gz \
-            HEAD \
-            $(git submodule foreach --quiet 'git archive --prefix=$displaypath/ HEAD')
-
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v3
         with:

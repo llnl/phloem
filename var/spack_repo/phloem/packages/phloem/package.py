@@ -9,8 +9,9 @@ from spack_repo.builtin.build_systems.cached_cmake import (
 )
 from spack_repo.builtin.build_systems.cuda import CudaPackage
 from spack_repo.builtin.build_systems.rocm import ROCmPackage
-from spack_repo.builtin.packages.blt.package import llnl_link_helpers
+
 from spack.package import *
+
 
 class Phloem(CachedCMakePackage, CudaPackage, ROCmPackage):
     """A suite of MPI benchmarks with Umpire memory allocation."""
@@ -28,6 +29,8 @@ class Phloem(CachedCMakePackage, CudaPackage, ROCmPackage):
     depends_on("umpire")
     depends_on("mpi")
 
+    variant("man", default=True, description="Install manual pages")
+
     with when("+rocm"):
         for arch_ in ROCmPackage.amdgpu_targets:
             depends_on(f"umpire+rocm amdgpu_target={arch_}", when=f"amdgpu_target={arch_}")
@@ -42,7 +45,6 @@ class Phloem(CachedCMakePackage, CudaPackage, ROCmPackage):
     depends_on("c", type="build")
     depends_on("cxx", type="build")
 
-
     def initconfig_mpi_entries(self):
         spec = self.spec
         entries = super().initconfig_mpi_entries()
@@ -53,12 +55,16 @@ class Phloem(CachedCMakePackage, CudaPackage, ROCmPackage):
     def cmake_args(self):
         args = super().cmake_args()
 
-        args.extend([
-            self.define_from_variant("ENABLE_HIP", "rocm"),
-            self.define_from_variant("ENABLE_CUDA", "cuda"),
-            self.define("BLT_SOURCE_DIR", self.spec["blt"].prefix),
-        ])
-        if "+rocm" in self.spec and self.spec.satisfies("^cray-mpich"):
+        args.extend(
+            [
+                self.define_from_variant("ENABLE_HIP", "rocm"),
+                self.define_from_variant("ENABLE_CUDA", "cuda"),
+                self.define("BLT_SOURCE_DIR", self.spec["blt"].prefix),
+            ]
+        )
+        if self.spec.satisfies("+man"):
+            args.append(self.define("CMAKE_INSTALL_MANDIR", self.prefix.man))
+        if self.spec.satisfies("+rocm") and self.spec.satisfies("^cray-mpich"):
             # Append to existing MPI link flags. does not appear influential...
             mpi_link_flags = self.spec["mpi"].libs.link_flags
             mpi_link_flags += "-lmpi_gtl_hsa"

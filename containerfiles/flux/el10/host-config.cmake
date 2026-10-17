@@ -10,7 +10,7 @@ set(CMAKE_C_COMPILER "/usr/bin/gcc" CACHE PATH "")
 set(CMAKE_CXX_COMPILER "/usr/bin/g++" CACHE PATH "")
 
 # Fortran support
-set(ENABLE_FORTRAN ON CACHE BOOL "")
+set(ENABLE_FORTRAN OFF CACHE BOOL "")
 set(CMAKE_Fortran_COMPILER "/usr/bin/gfortran" CACHE PATH "")
 #_blt_tutorial_compiler_config_end
 
