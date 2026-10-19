@@ -18,12 +18,14 @@ class Phloem(CachedCMakePackage, CudaPackage, ROCmPackage):
 
     homepage = "https://github.com/LLNL/phloem"
     git = "https://github.com/LLNL/phloem/phloem.git"
+    url = "https://github.com/llnl/phloem/releases/download/v2.0.0/phloem-v2.0.0.tar.gz"
 
     maintainers("nhanford")
 
     license("MIT", checked_by="nhanford")
 
     version("main", branch="main", submodules=False)
+    version("2.0.0", sha256="f1d01297c9a814108406d51c9ac3dd0e97193abde708153a88c97f898d8e0bb4")
 
     depends_on("blt", type="build")
     depends_on("umpire")
