@@ -10,7 +10,7 @@ from spack_repo.builtin.build_systems.cached_cmake import (
 from spack_repo.builtin.build_systems.cuda import CudaPackage
 from spack_repo.builtin.build_systems.rocm import ROCmPackage
 
-from spack.package import *
+from spack.package import depends_on, license, maintainers, variant, version, when
 
 
 class Phloem(CachedCMakePackage, CudaPackage, ROCmPackage):
@@ -18,12 +18,14 @@ class Phloem(CachedCMakePackage, CudaPackage, ROCmPackage):
 
     homepage = "https://github.com/LLNL/phloem"
     git = "https://github.com/LLNL/phloem/phloem.git"
+    url = "https://github.com/llnl/phloem/releases/download/v2.0.0/phloem-v2.0.0.tar.gz"
 
     maintainers("nhanford")
 
     license("MIT", checked_by="nhanford")
 
     version("main", branch="main", submodules=False)
+    version("2.0.0", sha256="f1d01297c9a814108406d51c9ac3dd0e97193abde708153a88c97f898d8e0bb4")
 
     depends_on("blt", type="build")
     depends_on("umpire")
@@ -38,7 +40,7 @@ class Phloem(CachedCMakePackage, CudaPackage, ROCmPackage):
             depends_on(f"{impl_} +rocm", when=f"^[virtuals=mpi] {impl_}")
 
     with when("+cuda"):
-        depends_on("umpire+cuda", when="+cuda")
+        depends_on("umpire+cuda")
         for impl_ in ["openmpi@5:", "mpich", "mvapich-plus", "cray-mpich"]:
             depends_on(f"{impl_} +cuda", when=f"^[virtuals=mpi] {impl_}")
 
@@ -46,14 +48,17 @@ class Phloem(CachedCMakePackage, CudaPackage, ROCmPackage):
     depends_on("cxx", type="build")
 
     def initconfig_mpi_entries(self):
-        spec = self.spec
         entries = super().initconfig_mpi_entries()
-        entries.append(cmake_cache_option("ENABLE_MPI", True))
-        entries.append(cmake_cache_path("MPI_HOME", self.spec["mpi"].prefix))
+        entries.extend(
+            [
+                cmake_cache_option("ENABLE_MPI", True),
+                cmake_cache_path("MPI_HOME", self.spec["mpi"].prefix),
+            ]
+        )
         return entries
 
     def cmake_args(self):
-        args = super().cmake_args()
+        args = []
 
         args.extend(
             [
@@ -65,8 +70,7 @@ class Phloem(CachedCMakePackage, CudaPackage, ROCmPackage):
         if self.spec.satisfies("+man"):
             args.append(self.define("CMAKE_INSTALL_MANDIR", self.prefix.man))
         if self.spec.satisfies("+rocm") and self.spec.satisfies("^cray-mpich"):
-            # Append to existing MPI link flags. does not appear influential...
             mpi_link_flags = self.spec["mpi"].libs.link_flags
             mpi_link_flags += "-lmpi_gtl_hsa"
-            self.define("BLT_MPI_LINK_FLAGS", mpi_link_flags)
+            args.append(self.define("BLT_MPI_LINK_FLAGS", mpi_link_flags))
         return args
