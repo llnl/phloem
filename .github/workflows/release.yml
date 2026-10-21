@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          submodules: recursive  # pulls thirdparty/blt and thirdparty/umpire
+          submodules: recursive
 
       - name: Install Sphinx
         run: |
@@ -26,11 +26,11 @@ jobs:
           rm -rf build
           popd
 
-      - name: Create source tarball (no thirdparty)
+      - name: Create source tarball
         run: |
           RELEASE_NAME="phloem-${{ github.ref_name }}"
           git archive --prefix=${RELEASE_NAME}/ HEAD | tar -x
-          cp -r share "${RELEASE_NAME}"
+          cp -r share "${RELEASE_NAME}/"
           tar -czvf "${RELEASE_NAME}.tar.gz" "${RELEASE_NAME}"
           rm -rf ${RELEASE_NAME}
 
@@ -39,6 +39,5 @@ jobs:
         with:
           files: |
             phloem-${{ github.ref_name }}.tar.gz
-            phloem-${{ github.ref_name }}-full.tar.gz
           draft: false
           prerelease: ${{ contains(github.ref_name, 'rc') || contains(github.ref_name, 'beta') }}
