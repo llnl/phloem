@@ -3,6 +3,8 @@
 Phloem is a small suite of MPI benchmarks built the way HPC applications are typically buit and
 showcasing some HPC communication patterns (such as partitioned communicators) that are generally
 not seen in other MPI benchmarking suites.
+You can find detailed documentation at `software.llnl.gov/phloem/
+<https://software.llnl.gov/phloem/>`_.
 
 ## UNDER CONSTRUCTION
 
