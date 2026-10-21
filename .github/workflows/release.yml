@@ -28,10 +28,11 @@ jobs:
 
       - name: Create source tarball (no thirdparty)
         run: |
-          git archive --format=tar.gz \
-            --prefix=phloem-${{ github.ref_name }}/ \
-            -o phloem-${{ github.ref_name }}.tar.gz \
-            HEAD
+          RELEASE_NAME="phloem-${{ github.ref_name }}"
+          git archive --prefix=${RELEASE_NAME}/ HEAD | tar -x
+          cp -r share "${RELEASE_NAME}"
+          tar -czvf "${RELEASE_NAME}.tar.gz" "${RELEASE_NAME}"
+          rm -rf ${RELEASE_NAME}
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v3
