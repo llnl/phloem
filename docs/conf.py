@@ -13,6 +13,9 @@ SPDX-License-Identifier: MIT
 See LICENSE file for more details
 """
 
+project = "Phloem"
+author = "Nathan Hanford"
+
 extensions = [
     "sphinx_rtd_theme",
     ]
